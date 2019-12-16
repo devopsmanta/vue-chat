@@ -1,12 +1,20 @@
 <template>
   <div class="container">
-    <div class="card login">
+    <div class="card signup">
       <div class="body">
         <h2 class="card-title text-center">
-          Login
+          SignUp
         </h2>
-        <form @submit.prevent="login" class="text-center">
+        <form @submit.prevent="signup" class="text-center">
           <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Name"
+              name="name"
+              v-model="name"
+            />
+            <br />
             <input
               type="text"
               class="form-control"
@@ -14,7 +22,7 @@
               name="email"
               v-model="email"
             />
-            <br/>
+            <br />
             <input
               type="text"
               class="form-control"
@@ -22,13 +30,11 @@
               name="password"
               v-model="password"
             />
-            <br/>
-            <p>
-              You don't have an account? You can create one
-            </p>
+            <br />
             <p v-if="errorText" class="text-danger">{{ errorText }}</p>
           </div>
-          <button class="btn btn-primary">Enter Chat</button>
+          <button class="btn btn-primary">Sign Up</button>
+          <p class="text-center">or go back to <router-link to="login">login</router-link></p>
         </form>
       </div>
     </div>
@@ -37,9 +43,10 @@
 
 <script>
 export default {
-  name: "home",
+  name: "SignUp",
   data() {
     return {
+      name: "",
       email: "",
       password: "",
       errorText: null
@@ -47,8 +54,8 @@ export default {
   },
   methods: {
     login() {
-      if (this.email && this.password) {
-        this.$router.push({ name: "Chat", params: { name: this.email } })
+      if (this.name) {
+        this.$router.push({ name: "Chat", params: { name: this.name } })
       } else {
         this.errorText = "Please enter credential!"
       }
@@ -58,7 +65,7 @@ export default {
 </script>
 
 <style>
-.login {
+.signup {
   max-width: 450px;
   margin-top: 50px;
   display: block;
