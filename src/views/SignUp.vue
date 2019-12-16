@@ -24,7 +24,7 @@
             />
             <br />
             <input
-              type="text"
+              type="password"
               class="form-control"
               placeholder="Password"
               name="password"
@@ -34,7 +34,9 @@
             <p v-if="errorText" class="text-danger">{{ errorText }}</p>
           </div>
           <button class="btn btn-primary">Sign Up</button>
-          <p class="text-center">or go back to <router-link to="login">login</router-link></p>
+          <p class="text-center">
+            or go back to <router-link to="login">login</router-link>
+          </p>
         </form>
       </div>
     </div>
@@ -42,6 +44,8 @@
 </template>
 
 <script>
+import firebase from "firebase"
+
 export default {
   name: "SignUp",
   data() {
@@ -53,9 +57,23 @@ export default {
     }
   },
   methods: {
-    login() {
-      if (this.name) {
-        this.$router.push({ name: "Chat", params: { name: this.name } })
+    signup() {
+      if (this.name && this.email && this.password) {
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(this.email, this.password)
+          .then(
+            user => {
+              user.updateProfile({
+                displayname: this.name
+              })
+              this.$router.replace("chat")
+            },
+            err => {
+              this.errorText = err.message
+            }
+          )
+        // this.$router.push({ name: "Chat", params: { name: this.name } })
       } else {
         this.errorText = "Please enter credential!"
       }

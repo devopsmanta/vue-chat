@@ -12,41 +12,44 @@
         <p class="text-danger" v-if="errorText">{{ errorText }}</p>
       </div>
 
-      <button class="btn btn-primary" type="submit" name="action">Submit</button>
+      <button class="btn btn-primary" type="submit" name="action">
+        Submit
+      </button>
     </form>
   </div>
 </template>
 
 <script>
-import fb from "@/firebase/init";
+import firebase from "firebase"
 
 export default {
   name: "CreateMessage",
-  props: ["name"],
   data() {
     return {
       newMessage: null,
       errorText: null
-    };
+    }
   },
   methods: {
     createMessage() {
       if (this.newMessage) {
-        fb.collection("messages")
+        firebase
+          .firestore()
+          .collection("messages")
           .add({
             message: this.newMessage,
-            name: this.name,
+            name: firebase.auth().currentUser.displayName,
             timestamp: Date.now()
           })
           .catch(err => {
-            console.log(err);
-          });
-        this.newMessage = null;
-        this.errorText = null;
+            console.log(err)
+          })
+        this.newMessage = null
+        this.errorText = null
       } else {
-        this.errorText = "A message must be entered!";
+        this.errorText = "A message must be entered!"
       }
     }
   }
-};
+}
 </script>
